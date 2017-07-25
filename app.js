@@ -37,6 +37,8 @@ function randomNumber(){
   Photo.imgElTwo.alt = Photo.all[Photo.randomImg[1]].name;
   Photo.imgElThree.src = Photo.all[Photo.randomImg[2]].source;
   Photo.imgElThree.alt = Photo.all[Photo.randomImg[2]].name;
+  // make a for loop that will push random img into a new array and check it
+  //at the begining of the random function. 
 }
 
 document.getElementById('img1').addEventListener('click', randomNumber);
