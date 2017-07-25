@@ -3,8 +3,8 @@
 function Photo(number) {
   this.name = number;
   this.source = 'img/' + this.name + '.jpg';
-  this.timeShown = 0;
-  Photo.timesClicked = 0;
+  this.timesShown = 0;
+  this.timesClicked = 0;
   Photo.totalClicks = 0;
   Photo.all.push(this);
 }
@@ -52,6 +52,15 @@ function renderImg(){
   Photo.imgElThree.alt = Photo.all[Photo.randomImg[2]].name;
   Photo.all[Photo.randomImg[2]].timesShown += 1;
 }
+function showList(){
+  var ulEl = document.getElementById('list');
+
+  for(var i = 0; i < Photo.all.length; i++){
+    var liEl = document.createElement('li');
+    liEl.textContent = Photo.all[i].name + ' was shown ' + Photo.all[i].timesShown + ' times, and clicked ' + Photo.all[i].timesClicked + ' times.';
+    ulEl.appendChild(liEl);
+  }
+}
 function handleClick(e){
   Photo.totalClicks += 1;
   console.log(e.target.alt);
@@ -59,6 +68,10 @@ function handleClick(e){
     if(e.target.alt === Photo.all[i].name){
       Photo.all[i].timesClicked += 1;
     }
+  }
+  if(Photo.totalClicks === 3){
+    Photo.imgConatner.removeEventListener('click', handleClick);
+    showList();
   }
   randomNumber();
 }
