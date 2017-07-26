@@ -20,38 +20,42 @@ Photo.imgElThree = document.getElementById('img3');
 Photo.imgConatner = document.getElementById('img_contaner');
 //add id for container
 
-Photo.randomImg = [];
+
 Photo.memoryImg = [];
 
 function randomNumber(){
-  Photo.randomImg = [];
-  for(var i = 0; i < 4 ; i++){
-    var randomIndex = Math.floor(Math.random() * Photo.all.length);
-    console.log(randomIndex);
-    Photo.randomImg.push(randomIndex);
-  };
-  while(Photo.randomImg[0] === Photo.randomImg[1] || Photo.randomImg[0] === Photo.randomImg[2] || Photo.randomImg[1] === Photo.randomImg[2]){
-    console.log('Dupe Found!');
-    randomNumber();
-  }
-  renderImg();
-  for(var j = 0; j < Photo.randomImg.length; j++){
-    Photo.memoryImg.push(Photo.randomImg[j]);
-  }
-  // make a for loop that will push random img into a new array and check it
-  //at the begining of the random function.
+  return Math.floor(Math.random() * Photo.all.length);
 }
 function renderImg(){
-  Photo.imgElOne.src = Photo.all[Photo.randomImg[0]].source;
-  Photo.imgElOne.alt = Photo.all[Photo.randomImg[0]].name;
-  Photo.all[Photo.randomImg[0]].timesShown += 1;
-  Photo.imgElTwo.src = Photo.all[Photo.randomImg[1]].source;
-  Photo.imgElTwo.alt = Photo.all[Photo.randomImg[1]].name;
-  Photo.all[Photo.randomImg[1]].timesShown += 1;
-  Photo.imgElThree.src = Photo.all[Photo.randomImg[2]].source;
-  Photo.imgElThree.alt = Photo.all[Photo.randomImg[2]].name;
-  Photo.all[Photo.randomImg[2]].timesShown += 1;
+  var numbers = [];
+  numbers[0] = randomNumber();
+  numbers[1] = randomNumber();
+  numbers[2] = randomNumber();
+
+  while(numbers[0] === numbers[1] || numbers[0] === numbers[2] || numbers[1] === numbers[2]){
+    console.log('Dupe Found!');
+    numbers[1] = randomNumber();
+    numbers[2] = randomNumber();
+  }
+  // while(){
+  //   randomNumber();
+  // }
+  Photo.imgElOne.src = Photo.all[numbers[0]].source;
+  Photo.imgElOne.alt = Photo.all[numbers[0]].name;
+  Photo.all[numbers[0]].timesShown += 1;
+  Photo.imgElTwo.src = Photo.all[numbers[1]].source;
+  Photo.imgElTwo.alt = Photo.all[numbers[1]].name;
+  Photo.all[numbers[1]].timesShown += 1;
+  Photo.imgElThree.src = Photo.all[numbers[2]].source;
+  Photo.imgElThree.alt = Photo.all[numbers[2]].name;
+  Photo.all[numbers[2]].timesShown += 1;
 }
+
+  // make a for loop that will push random img into a new array and check it
+  //at the begining of the random function.
+
+
+
 function showList(){
   var ulEl = document.getElementById('list');
 
@@ -69,13 +73,14 @@ function handleClick(e){
       Photo.all[i].timesClicked += 1;
     }
   }
-  if(Photo.totalClicks === 3){
+  if(Photo.totalClicks === 25){
     Photo.imgConatner.removeEventListener('click', handleClick);
     showList();
+    return;
   }
-  randomNumber();
+  renderImg();
 }
 // document.getElementById('img_contaner').addEventListener('click', handleClick);
 Photo.imgConatner.addEventListener('click', handleClick);
 
-randomNumber();
+renderImg();
