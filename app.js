@@ -18,10 +18,6 @@ Photo.imgElOne = document.getElementById('img1');
 Photo.imgElTwo = document.getElementById('img2');
 Photo.imgElThree = document.getElementById('img3');
 Photo.imgConatner = document.getElementById('img_contaner');
-//add id for container
-
-
-Photo.memoryImg = [];
 
 function randomNumber(){
   return Math.floor(Math.random() * Photo.all.length);
@@ -37,9 +33,6 @@ function renderImg(){
     numbers[1] = randomNumber();
     numbers[2] = randomNumber();
   }
-  // while(){
-  //   randomNumber();
-  // }
   Photo.imgElOne.src = Photo.all[numbers[0]].source;
   Photo.imgElOne.alt = Photo.all[numbers[0]].name;
   Photo.all[numbers[0]].timesShown += 1;
@@ -50,11 +43,6 @@ function renderImg(){
   Photo.imgElThree.alt = Photo.all[numbers[2]].name;
   Photo.all[numbers[2]].timesShown += 1;
 }
-
-  // make a for loop that will push random img into a new array and check it
-  //at the begining of the random function.
-
-
 
 function showList(){
   var ulEl = document.getElementById('list');
@@ -76,11 +64,33 @@ function handleClick(e){
   if(Photo.totalClicks === 25){
     Photo.imgConatner.removeEventListener('click', handleClick);
     showList();
+    drawChart();
     return;
   }
   renderImg();
 }
-// document.getElementById('img_contaner').addEventListener('click', handleClick);
 Photo.imgConatner.addEventListener('click', handleClick);
 
 renderImg();
+
+//Chart
+function brawChart(){
+  var ctx = document.getElementById('chart').getContext('2d');
+  var clickChart = new Chart(ctx,{
+  type: 'bar',
+  data: {
+      labeles: ['img src', 'jpg'],
+      datasets: [{
+          labeles: 'number of vots',
+          data: [12,5],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+          ]
+      }]
+  },
+
+  options:
+});
+brewChart = true;
+}
