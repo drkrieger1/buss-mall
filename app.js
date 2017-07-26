@@ -1,4 +1,8 @@
 'use strict';
+var lastShowen = [];
+var names = [];
+var clicks = [];
+var shown = [];
 
 function Photo(number) {
   this.name = number;
@@ -33,6 +37,11 @@ function renderImg(){
     numbers[1] = randomNumber();
     numbers[2] = randomNumber();
   }
+  for(var i = 0; i < numbers.lenght; i++){
+    while (numbers[i] === lastShowen[0] || numbers[i] === lastShowen[1] || numbers[i] === lastShowen[2] || numbers[0] === numbers[1] || numbers[0] === numbers[2] || numbers[1] === numbers[2]) {
+      numbers[i] = randomNumber();
+    }
+  }
   Photo.imgElOne.src = Photo.all[numbers[0]].source;
   Photo.imgElOne.alt = Photo.all[numbers[0]].name;
   Photo.all[numbers[0]].timesShown += 1;
@@ -42,6 +51,7 @@ function renderImg(){
   Photo.imgElThree.src = Photo.all[numbers[2]].source;
   Photo.imgElThree.alt = Photo.all[numbers[2]].name;
   Photo.all[numbers[2]].timesShown += 1;
+  lastShowen = numbers;
 }
 
 function showList(){
@@ -54,6 +64,10 @@ function showList(){
   }
 }
 function handleClick(e){
+  if(e.target.id === Photo.imgConatner){
+    alert('please select a photo');
+    return;
+  };
   Photo.totalClicks += 1;
   console.log(e.target.alt);
   for(var i = 0; i < Photo.all.length; i++){
@@ -64,6 +78,7 @@ function handleClick(e){
   if(Photo.totalClicks === 25){
     Photo.imgConatner.removeEventListener('click', handleClick);
     showList();
+    tableUpdate();
     drawChart();
     return;
   }
@@ -73,24 +88,91 @@ Photo.imgConatner.addEventListener('click', handleClick);
 
 renderImg();
 
+//update table data
+function tableUpdate(){
+  for(var i = 0; i < Photo.all.length; i++){
+    shown[i] = Photo.all[i].timesShown;
+    clicks[i] = Photo.all[i].timesClicked;
+    names[i] = Photo.all[i].name;
+  }
+}
+var data = {
+  labels: names,
+  datasets: [
+    {
+      data: clicks,
+      label: 'Click Chart',
+      backgroundColor: [
+        '#58D68D',
+        '#D2B4DE',
+        '#F1C40F',
+        '#D35400',
+        '#E74C3C',
+        '#5DADE2',
+        '#76D7C4',
+        '#641E16',
+        '#16A085',
+        '#D35400',
+        '#D2B4DE',
+        '#F1C40F',
+        '#D35400',
+        '#E74C3C',
+        '#5DADE2',
+        '#76D7C4',
+        '#641E16',
+        '#16A085',
+        '#D35400',
+      ],
+      hoverBackgroundColor:[
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+      ]
+    }
+  ]
+};
+
 //Chart
-function brawChart(){
+function drawChart(){
   var ctx = document.getElementById('chart').getContext('2d');
   var clickChart = new Chart(ctx,{
-  type: 'bar',
-  data: {
-      labeles: ['img src', 'jpg'],
-      datasets: [{
-          labeles: 'number of vots',
-          data: [12,5],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-          ]
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: false,
+      anamation: {
+        duration: 1000,
+        easing: 'easOutBounce'
+      }
+    },
+    scales:{
+      yAxes: [{
+        ticks: {
+          max: 10,
+          min: 0,
+          stepSize: 1.0
+        }
       }]
-  },
+    }
 
-  options:
-});
-brewChart = true;
+  });
+  // chartDrawn = true;
 }
