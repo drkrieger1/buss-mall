@@ -1,4 +1,8 @@
 'use strict';
+var lastShowen = [];
+var names = [];
+var clicks = [];
+var shown = [];
 
 function Photo(number) {
   this.name = number;
@@ -9,7 +13,7 @@ function Photo(number) {
   Photo.all.push(this);
 }
 Photo.all = [];
-Photo.allNames = ['bag', 'banana', 'bathroom', 'boots','breakfast','bubblegum','chair','cthulhu','dog-duck','dragon','pen','pet-sweep','scissors','shark','sweep','tauntaun','usb','water-can','wine-glass'];
+Photo.allNames = ['bag', 'banana', 'bathroom', 'boots','breakfast','bubblegum','chair','cthulhu','dog-duck','dragon','pen','pet-sweep','scissors','shark','sweep','tauntaun','usb','water-can','wine-glass', 'unicorn'];
 
 for(var i = 0; i < Photo.allNames.length; i++){
   new Photo(Photo.allNames[i]);
@@ -22,16 +26,24 @@ Photo.imgConatner = document.getElementById('img_contaner');
 function randomNumber(){
   return Math.floor(Math.random() * Photo.all.length);
 }
+var numbers = [];
 function renderImg(){
-  var numbers = [];
   numbers[0] = randomNumber();
   numbers[1] = randomNumber();
   numbers[2] = randomNumber();
 
-  while(numbers[0] === numbers[1] || numbers[0] === numbers[2] || numbers[1] === numbers[2]){
+  while(numbers[0] === numbers[1]){
     console.log('Dupe Found!');
     numbers[1] = randomNumber();
+  }
+  while(numbers[2] === numbers[1] || numbers[2] === numbers[0]){
     numbers[2] = randomNumber();
+  }
+  for(var i = 0; i < numbers.lenght; i++){
+    while (numbers[i] === lastShowen[0] || numbers[i] === lastShowen[1] || numbers[i] === lastShowen[2] || numbers[0] === numbers[1] || numbers[0] === numbers[2] || numbers[1] === numbers[2]) {
+      console.log('for while dupe');
+      numbers[i] = randomNumber();
+    }
   }
   Photo.imgElOne.src = Photo.all[numbers[0]].source;
   Photo.imgElOne.alt = Photo.all[numbers[0]].name;
@@ -42,18 +54,32 @@ function renderImg(){
   Photo.imgElThree.src = Photo.all[numbers[2]].source;
   Photo.imgElThree.alt = Photo.all[numbers[2]].name;
   Photo.all[numbers[2]].timesShown += 1;
+  lastShowen = numbers;
+  // console.log(lastShowen);
 }
 
-function showList(){
-  var ulEl = document.getElementById('list');
-
-  for(var i = 0; i < Photo.all.length; i++){
-    var liEl = document.createElement('li');
-    liEl.textContent = Photo.all[i].name + ' was shown ' + Photo.all[i].timesShown + ' times, and clicked ' + Photo.all[i].timesClicked + ' times.';
-    ulEl.appendChild(liEl);
-  }
+function cache(){
+  localStorage.setItem('clicks', JSON.stringify(clicks));
+  localStorage.setItem('shown', JSON.stringify(shown));
 }
+function summonCache(){
+  clicks = JSON.parse(localStorage.clicks);
+  shown = JSON.parse(localStorage.shown);
+}
+
+// function showList(){
+//   var ulEl = document.getElementById('list');
+//
+//   for(var i = 0; i < Photo.all.length; i++){
+//     var liEl = document.createElement('li');
+//     liEl.textContent = Photo.all[i].name + ' was shown ' + Photo.all[i].timesShown + ' times, and clicked ' + Photo.all[i].timesClicked + ' times.';
+//     ulEl.appendChild(liEl);
+//   }
+// }
 function handleClick(e){
+  if(e.target.id === 'img_contaner'){
+    return alert('Please select a photo');
+  }
   Photo.totalClicks += 1;
   console.log(e.target.alt);
   for(var i = 0; i < Photo.all.length; i++){
@@ -61,36 +87,116 @@ function handleClick(e){
       Photo.all[i].timesClicked += 1;
     }
   }
-  if(Photo.totalClicks === 25){
+  if(Photo.totalClicks === 5){
     Photo.imgConatner.removeEventListener('click', handleClick);
-    showList();
+    // showList();
+    tableUpdate();
+    cache();
+    console.log('chache in bank yo!');
     drawChart();
     return;
   }
   renderImg();
 }
 Photo.imgConatner.addEventListener('click', handleClick);
-
+//++++++++++++++++checking storage+++++++++
+if(localStorage.clicks){
+  summonCache();
+  console.log('Summoned Cache!');
+}else{
+  for(var i = 0; i < Photo.allNames.length; i++){
+    new Photo(Photo.allNames[i]);
+  }
+};
 renderImg();
 
+//update table data
+function tableUpdate(){
+  for(var i = 0; i < Photo.all.length; i++){
+    shown[i] = Photo.all[i].timesShown;
+    clicks[i] = Photo.all[i].timesClicked;
+    names[i] = Photo.all[i].name;
+  }
+}
+var data = {
+  labels: names,
+  datasets: [
+    {
+      data: clicks,
+      label: 'Click Chart',
+      backgroundColor: [
+        '#58D68D',
+        '#D2B4DE',
+        '#F1C40F',
+        '#D35400',
+        '#E74C3C',
+        '#5DADE2',
+        '#76D7C4',
+        '#641E16',
+        '#16A085',
+        '#D35400',
+        '#D2B4DE',
+        '#F1C40F',
+        '#D35400',
+        '#E74C3C',
+        '#5DADE2',
+        '#76D7C4',
+        '#641E16',
+        '#16A085',
+        '#D35400',
+        '#42f4f1'
+      ],
+      hoverBackgroundColor:[
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4',
+        '#D0D3D4'
+      ]
+    }
+  ]
+};
+
 //Chart
-function brawChart(){
+function drawChart(){
   var ctx = document.getElementById('chart').getContext('2d');
   var clickChart = new Chart(ctx,{
-  type: 'bar',
-  data: {
-      labeles: ['img src', 'jpg'],
-      datasets: [{
-          labeles: 'number of vots',
-          data: [12,5],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-          ]
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: false,
+      anamation: {
+        duration: 1000,
+        easing: 'easOutBounce'
+      }
+    },
+    scales:{
+      yAxes: [{
+        ticks: {
+          max: 10,
+          min: 0,
+          stepSize: 1.0
+        }
       }]
-  },
+    }
 
-  options:
-});
-brewChart = true;
+  });
+  // chartDrawn = true;
 }
