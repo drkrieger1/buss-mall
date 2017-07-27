@@ -1,3 +1,10 @@
 img {
   width: 100px;
 }
+#img_contaner {
+  width: 400px;
+}
+body {
+  width: 960px;
+  margin: 0 auto;
+}
