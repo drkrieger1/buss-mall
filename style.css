@@ -5,6 +5,11 @@ h1 {
   width: 250px;
   margin: 0 auto;
   font-size: 30px;
+  color: white;
+  background-color: black;
+  text-align: center;
+  font-family: 'Monoton', cursive;
+  border-radius: 10px;
 }
 #img_contaner{
   width: 800px;
@@ -22,12 +27,17 @@ p {
   margin: 0 auto;
   font-size: 24px;
   text-align: center;
+  font-family: 'Sintony', sans-serif;
+  margin-top: 30px;
+  margin-bottom:30px;
 }
 main {
   width: 960px;
   margin: 0 auto;
-  
+
 }
 img {
   width: 250px;
+  max-height: 300px;
+  text-align: center;
 }
